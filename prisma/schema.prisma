@@ -6,3 +6,14 @@ generator client {
 datasource db {
   provider = "mysql"
 }
+
+model Category {
+  id Int @id @default(autoincrement())
+  name String @unique
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+  // Relazione virtuale(no crea colonna in MySQL)
+  products Product[]
+}
+
+
