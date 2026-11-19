@@ -8,23 +8,24 @@ datasource db {
 }
 
 model Category {
-  id Int @id @default(autoincrement())
-  name String @unique
-  createAt DateTime @default(now())
-  updateAt DateTime @updatedAt
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  createAt DateTime  @default(now())
+  updateAt DateTime  @updatedAt
   // Relazione virtuale(no crea colonna in MySQL)
-  products  Product[]
+  products Product[]
 }
 
 model Product {
-  id Int @id @default(autoincrement())
-  name String
-  brand String
-  description String? @db.Text
-  price Decimal @db.Decimal(8, 2)
-  stock Int @default(0)
-  isActive Boolean @default(true)
-  createdAt DateTime @default(now())
-  updateAt DateTime @updatedAt
+  id          Int       @id @default(autoincrement())
+  name        String
+  brand       String
+  description String?   @db.Text
+  price       Decimal   @db.Decimal(8, 2)
+  stock       Int       @default(0)
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updateAt    DateTime  @updatedAt
+  category    Category? @relation(fields: [categoryId], references: [id])
+  categoryId  Int?
 }
-
