@@ -15,6 +15,13 @@ router.get('/:id', (req, res) => {
     res.send(`Dettagli del prodotto con ID: ${id}`);
 });
 
+// STORE - Creazione di un nuovo prodotto (POST /products)
+router.post('/', (req, res) => {
+    const body = req.body;
+    console.log(body);
+    res.send(`Creazione di un nuovo prodotto Quipurati`);
+})
+
 // UPDATE - Modificazione parziale o totale di un prodotto (PATCH /products/:id)
 router.patch('/:id', (req, res) => {
   const id = Number(req.params.id);
