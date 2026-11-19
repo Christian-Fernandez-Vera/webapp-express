@@ -10,3 +10,5 @@ router.get('/', (req, res) => {
 });
 
 // SHOW
+
+export default router;
