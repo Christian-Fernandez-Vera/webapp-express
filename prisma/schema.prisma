@@ -21,6 +21,8 @@ model Product {
   name String
   brand String
   description String? @db.Text
-  price Decimal @db.Decimal(8,2)
+  price Decimal @db.Decimal(8, 2)
+  stock Int @default(0)
+  isActive Boolean @default(true)
 }
 
