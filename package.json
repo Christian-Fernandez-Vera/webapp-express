@@ -9,13 +9,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devEngines": {
-    "packageManager": {
-      "name": "pnpm",
-      "version": "12.21.0",
-      "onFail": "download"
-    }
-  },
+
   "packageManager": "pnpm@12.21.0",
   "dependencies": {
     "@prisma/adapter-mariadb": "^7.10.1",
