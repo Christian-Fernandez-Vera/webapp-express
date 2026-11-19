@@ -20,5 +20,7 @@ model Product {
   id Int @id @default(autoincrement())
   name String
   brand String
+  description String? @db.Text
+  price Decimal @db.Decimal(8,2)
 }
 
