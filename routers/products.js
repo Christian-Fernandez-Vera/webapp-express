@@ -30,5 +30,10 @@ router.patch('/:id', (req, res) => {
   res.send(`Aggionamento del prodotto con id: ${id}`);
 });
 
+// DESTROY - Eliminazione di un prodotto (DELETE /products/:id)
+router.delete('/:id', (req, res) => {
+  const id = Number(req.params.id);
+  res.send(`Eliminazione del prodotto con id: ${id}`)
+});
 
 export default router;
