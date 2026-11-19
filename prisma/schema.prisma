@@ -13,7 +13,10 @@ model Category {
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
   // Relazione virtuale(no crea colonna in MySQL)
-  products Product[]
+  products  Product[]
 }
 
+model Product {
+  
+}
 
