@@ -14,7 +14,11 @@ app.get('/', (req, res) => {
 });
 
 // Registro del router di prodotti
-app.use('/products', productsRouter);
+app.use('/api/products', productsRouter);
+
+// Middlewares di chiusura (sempre dopo tutti i percorsi)
+app.use(notFound);
+app.use(errorHandler);
 
 // Server listening port
 app.listen(port, () => {
