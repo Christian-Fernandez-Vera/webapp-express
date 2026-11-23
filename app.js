@@ -1,5 +1,7 @@
 import express from "express";
 import productsRouter from "./routers/products.js"
+import notFound from "./middlewares/notFound.js";
+import errorsHandler from "./middlewares/errorsHandler.js";
 
 // Sezione principale del server Express
 const app = express();
@@ -18,7 +20,7 @@ app.use('/api/products', productsRouter);
 
 // Middlewares di chiusura (sempre dopo tutti i percorsi)
 app.use(notFound);
-app.use(errorHandler);
+app.use(errorsHandler);
 
 // Server listening port
 app.listen(port, () => {
