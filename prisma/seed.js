@@ -23,6 +23,12 @@ async function main() {
   // Trasformiamo l'array de strings in array di oggietti { name } per Prisma
   const categoriesData = categoryNames.map((name) => ({ name }));
 
-  
-  
+  // Inserimento di massa nella tabella Category
+  await prisma.category.createMany({
+    data: categoriesData,
+  });
+
+  // Recuperiamo le categorie create con i loro ID reali generati da MySQL
+  const categories = await prisma.category.findMany();
+  console.log("Categorie create:", categories);
 }
