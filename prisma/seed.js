@@ -32,3 +32,12 @@ async function main() {
   const categories = await prisma.category.findMany();
   console.log("Categorie create:", categories);
 }
+
+main()
+  .catch((err) => {
+    console.error("Errore durante il seeding:", err);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
