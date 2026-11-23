@@ -16,6 +16,8 @@ app.get('/', (req, res) => {
 });
 
 // Registro del router di prodotti
+// Lasciamo api/products in modo da poter aggiungere altre rotte in futuro come api/users, api/orders, etc.
+// Dobbiamo ricordarci che in questo modo se avremo una rotta / in futuro dovremo usare /api/products/
 app.use('/api/products', productsRouter);
 
 // Middlewares di chiusura (sempre dopo tutti i percorsi)
