@@ -30,7 +30,29 @@ async function main() {
 
   // Recuperiamo le categorie create con i loro ID reali generati da MySQL
   const categories = await prisma.category.findMany();
-  console.log("Categorie create:", categories);
+  // console.log("Categorie create:", categories);
+
+  // Marchi del catalogo Quipurati per combinare dati reali con Faker
+  const brands = ["Curren", "Lige", "Pagani Design", "Naviforce", "Steeldive"];
+  const products = [];
+
+  // Generiamo 15 prodotti fittizi associati a una categoria casuale valida
+  for (let i = 0; i < 15; i++) {
+    products.push({
+      name: faker.commerce.productName(),
+      brand: faker.helpers.arrayElement(brands),
+      description: faker.lorem.paragraph({ min:2, max:4}),
+      price: Number(faker.commerce.price({ min:29, max: 250, dec: 2 })),
+      stock: faker.number.int({ min:0, max: 50 }),
+      isActive: faker.datatype.boolean(),
+      categoryId: faker.helpers.arrayElement(categories).id,    
+    });   
+  }
+
+  // Inserimento di massa nella tabella Product
+  
+
+
 }
 
 main()
