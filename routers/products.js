@@ -10,9 +10,31 @@ const isStringValid = (value) => typeof value === "string" && value.trim() !== "
 
 // Prefisso definito in app.js "/api/products"
 
-// INDEX - Lista di tutti i prodotti (GET /products)
-router.get("/", (req, res) => {
-  res.send("Lista dei prodotti Quipurati");
+// INDEX - Lista dei prodotti attivi con limite opzionale (GET /api/products?limit=3)
+router.get("/", async (req, res) => {
+  const { limit } = req.query;
+
+  // Se il client invia limit non vuoto, verifichiamo che sia un intero positivo
+  if (limit && (!Number.isInteger(Number(limit)) || Number(limit) <= 0)) {
+    return sendError(res, 400, "Invalid limit parameter");
+  }
+  const products = await prisma.products.findMany({
+    where: {
+      isActive: true,
+    },
+    // Restituisci solo i campi indicati
+    select: {
+      id: true,
+      name: true,
+      brand: true,
+      price: true,
+      stock: true,
+      isActive: true,
+    },
+    // Se presente, limita il numero di risultati
+    take: limit ? Number(limit) : undefined,
+  })
+  // res.send("Lista dei prodotti Quipurati");
 });
 
 // SHOW - Dettagli di un prodotto specifico (GET /products/:id)
