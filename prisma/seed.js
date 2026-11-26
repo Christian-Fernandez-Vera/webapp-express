@@ -50,9 +50,11 @@ async function main() {
   }
 
   // Inserimento di massa nella tabella Product
-  
+  await prisma.product.createMany({
+    data: products,
+  });
 
-
+  console.log(`Seeding completato: ${categories.length} categorie e ${products.length} prodotti`);
 }
 
 main()
