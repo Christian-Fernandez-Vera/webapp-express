@@ -2,6 +2,12 @@ import express from "express";
 
 const router = express.Router();
 
+// Utilities locali per centralizzare errori JSON e validazioni di base
+const sendError = (res, status, message) =>
+  res.status(status.json)({ error: message, status });
+// Verifica che il valore sia una stringa non vuota (rimuovendo spazi bianchi)
+const isStringValid = (value) => typeof value === "string" && value.trim() !== "";
+
 // Prefisso definito in app.js "/api/products"
 
 // INDEX - Lista di tutti i prodotti (GET /products)
