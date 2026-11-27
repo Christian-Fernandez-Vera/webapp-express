@@ -1,10 +1,11 @@
 import express from "express";
+import prisma from "../lib/prisma.js";
 
 const router = express.Router();
 
 // Utilities locali per centralizzare errori JSON e validazioni di base
 const sendError = (res, status, message) =>
-  res.status(status.json)({ error: message, status });
+  res.status(status).json({ error: message, status });
 // Verifica che il valore sia una stringa non vuota (rimuovendo spazi bianchi)
 const isStringValid = (value) =>
   typeof value === "string" && value.trim() !== "";
@@ -19,7 +20,7 @@ router.get("/", async (req, res) => {
   if (limit && (!Number.isInteger(Number(limit)) || Number(limit) <= 0)) {
     return sendError(res, 400, "Invalid limit parameter");
   }
-  const products = await prisma.products.findMany({
+  const products = await prisma.product.findMany({
     where: {
       isActive: true,
     },
@@ -71,7 +72,7 @@ router.post("/", async (req, res) => {
     req.body || {};
 
   // Validazione campi testuali obbligatori
-  if (!inStringValid(name) || !inStringValid(brand)) {
+  if (!isStringValid(name) || !isStringValid(brand)) {
     return sendError(res, 400, "Name and brand are required");
   }
 
@@ -112,7 +113,8 @@ router.post("/", async (req, res) => {
       brand: brand.trim(),
       description: isStringValid(description) ? description.trim() : null,
       price: parsedPrice,
-      stock: stock !== undefined ? Boolean(isActive) : true,
+      stock: stock !== undefined ? Number(stock) : 0,
+      isActive: isActive !== undefined ? Boolean(isActive) : true,
       categoryId: parsedCategoryId,
     },
   });
@@ -153,8 +155,8 @@ router.delete("/:id", async (req, res) => {
 
   await prisma.product.delete({
     where: { id },
-  })
-  
+  });
+
   // res.send(`Eliminazione del prodotto con id: ${id}`);
   res.sendStatus(204);
 });
