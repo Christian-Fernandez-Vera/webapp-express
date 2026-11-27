@@ -33,14 +33,34 @@ router.get("/", async (req, res) => {
     },
     // Se presente, limita il numero di risultati
     take: limit ? Number(limit) : undefined,
-  })
+  });
+
+  res.json(products);
   // res.send("Lista dei prodotti Quipurati");
 });
 
-// SHOW - Dettagli di un prodotto specifico (GET /products/:id)
-router.get("/:id", (req, res) => {
+// SHOW - Dettagli completi di un singolo prodotto con categoria inclusa (GET /api/products/:id)
+router.get("/:id", async (req, res) => {
   const id = Number(req.params.id);
-  res.send(`Dettagli del prodotto con ID: ${id}`);
+
+  // Validazione formato numerico
+  if (!Number.isInteger(id)) {
+    return sendError(res, 400, "Invalid product ID");
+  }
+  // Cerca il prodotto e include la categoria
+  const product = await prisma.product.findUnique({
+    where: { id },
+    include: { category: true },
+    omit: { categoryId: true },
+  });
+
+  // Validazione esistenza della risorsa nel DB
+  if (!product) {
+    return sendError(res, 404, "Product not found");
+  }
+  // Se il prodotto viene trovato, lo restituisco in JSON
+  res.json(product);
+  // res.send(`Dettagli del prodotto con ID: ${id}`);
 });
 
 // STORE - Creazione di un nuovo prodotto (POST /products)
