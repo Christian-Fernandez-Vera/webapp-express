@@ -84,7 +84,25 @@ router.post("/", async (req, res) => {
     return sendError(res, 400, "A valid price is required");
   }
 
+  // Validazione categoryId se presente (nel nostro schema e opzionale)
+  let parsedCategoryId = null;
+  // Converto a numero solo se non è nullo o indefinito
+  if (categoryId !== undefined && categoryId !== null) {
+    parsedCategoryId = Number(categoryId);
   
+  // Validazione formato numerico intero
+    if (!Number.isInteger(parsedCategoryId)) {
+      return sendError(res, 400, "Invalid categoryId");
+    }
+  //Controllo che la categoria esista nel database
+    const category = await prisma.category.findUnique({
+      where: { id: parsedCategoryId },
+    });
+  // Se la categoria non esiste, restituisco errore
+    if (!category) {
+      return sendError(res, 400, "Category ID not valid");
+    }
+  }
 
   const body = req.body;
   console.log(body);
