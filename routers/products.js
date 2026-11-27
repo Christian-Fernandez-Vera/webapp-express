@@ -146,12 +146,17 @@ router.delete("/:id", async (req, res) => {
   const product = await prisma.product.findUnique({
     where: { id },
   });
+  // Controllo l'esistenza della risorsa e restituisco errore se non trovo nulla
+  if (!product) {
+    return sendError(res, 404, "Product not found");
+  }
 
-
-
-
-
-  res.send(`Eliminazione del prodotto con id: ${id}`);
+  await prisma.product.delete({
+    where: { id },
+  })
+  
+  // res.send(`Eliminazione del prodotto con id: ${id}`);
+  res.sendStatus(204);
 });
 
 export default router;
