@@ -103,10 +103,24 @@ router.post("/", async (req, res) => {
       return sendError(res, 400, "Category ID not valid");
     }
   }
+  // Creazione del prodotto
+  const newProduct = await prisma.product.create({
+    data: {
+      name: name.trim(),
+      brand: brand.trim(),
+      description: isStringValid(description) ? description.trim() : null,
+      price: parsedPrice,
+      stock: stock !== undefined ? Boolean(isActive) : true,
+      categoryId: parsedCategoryId,
+    },
+  });
 
-  const body = req.body;
-  console.log(body);
-  res.send(`Creazione di un nuovo prodotto Quipurati`);
+  // const body = req.body;
+  // console.log(body);
+  // res.send(`Creazione di un nuovo prodotto Quipurati`);
+
+  // Restituisco il prodotto appena creato con i suoi dati originali, più l'id generato automaticamente
+  res.status(201).json(newProduct);
 });
 
 // UPDATE - Modificazione parziale o totale di un prodotto (PATCH /products/:id)
