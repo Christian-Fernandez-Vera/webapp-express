@@ -6,7 +6,8 @@ const router = express.Router();
 const sendError = (res, status, message) =>
   res.status(status.json)({ error: message, status });
 // Verifica che il valore sia una stringa non vuota (rimuovendo spazi bianchi)
-const isStringValid = (value) => typeof value === "string" && value.trim() !== "";
+const isStringValid = (value) =>
+  typeof value === "string" && value.trim() !== "";
 
 // Prefisso definito in app.js "/api/products"
 
@@ -66,7 +67,8 @@ router.get("/:id", async (req, res) => {
 // STORE - Creazione di un nuovo prodotto (POST /products)
 router.post("/", async (req, res) => {
   // Destrutturazione esplicita per non passare mai req.body direttamente a Prisma
-  const { name, brand, description, price, stock, isActive, categoryId } = req.body || {};
+  const { name, brand, description, price, stock, isActive, categoryId } =
+    req.body || {};
 
   // Validazione campi testuali obbligatori
   if (!inStringValid(name) || !inStringValid(brand)) {
@@ -89,16 +91,16 @@ router.post("/", async (req, res) => {
   // Converto a numero solo se non è nullo o indefinito
   if (categoryId !== undefined && categoryId !== null) {
     parsedCategoryId = Number(categoryId);
-  
-  // Validazione formato numerico intero
+
+    // Validazione formato numerico intero
     if (!Number.isInteger(parsedCategoryId)) {
       return sendError(res, 400, "Invalid categoryId");
     }
-  //Controllo che la categoria esista nel database
+    //Controllo che la categoria esista nel database
     const category = await prisma.category.findUnique({
       where: { id: parsedCategoryId },
     });
-  // Se la categoria non esiste, restituisco errore
+    // Se la categoria non esiste, restituisco errore
     if (!category) {
       return sendError(res, 400, "Category ID not valid");
     }
@@ -132,8 +134,23 @@ router.patch("/:id", (req, res) => {
 });
 
 // DESTROY - Eliminazione di un prodotto (DELETE /products/:id)
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   const id = Number(req.params.id);
+
+  // Validazione formato numerico intero
+  if (!Number.isInteger(id)) {
+    return sendError(res, 400, "Invalid product ID");
+  }
+
+  // Controlliamo se il prodotto esiste prima di eliminarlo
+  const product = await prisma.product.findUnique({
+    where: { id },
+  });
+
+
+
+
+
   res.send(`Eliminazione del prodotto con id: ${id}`);
 });
 
