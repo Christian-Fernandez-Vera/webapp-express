@@ -64,7 +64,28 @@ router.get("/:id", async (req, res) => {
 });
 
 // STORE - Creazione di un nuovo prodotto (POST /products)
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
+  // Destrutturazione esplicita per non passare mai req.body direttamente a Prisma
+  const { name, brand, description, price, stock, isActive, categoryId } = req.body || {};
+
+  // Validazione campi testuali obbligatori
+  if (!inStringValid(name) || !inStringValid(brand)) {
+    return sendError(res, 400, "Name and brand are required");
+  }
+
+  // Validazione del prezzo obbligatorio (Decimal in schema.prisma)
+  const parsedPrice = Number(price);
+  if (
+    price === undefined ||
+    price === "" ||
+    Number.isNaN(parsedPrice) ||
+    parsedPrice < 0
+  ) {
+    return sendError(res, 400, "A valid price is required");
+  }
+
+  
+
   const body = req.body;
   console.log(body);
   res.send(`Creazione di un nuovo prodotto Quipurati`);
