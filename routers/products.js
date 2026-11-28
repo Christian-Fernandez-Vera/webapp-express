@@ -23,8 +23,41 @@ router.get("/:id", show);
 router.post("/", store);
 
 // UPDATE - Modificazione parziale o totale di un prodotto (PATCH /products/:id)
-router.patch("/:id", (req, res) => {
+router.patch("/:id", async (req, res) => {
   const id = Number(req.params.id);
+
+  // Validazione di formato ID riceuto nella URL
+  if (!Number.isInteger(id)) {
+    return sendError(res, 400, "Invalid product ID");
+  }  
+
+  // Verificare l'esistenza del prodotto prima di tentare un aggiornamento
+  const existingProduct = await prisma.product.findUnique({
+    where: { id },
+  });
+  // Controllo l'esistenza della risorsa e restituisco errore se non trovo nulla
+  if (!existingProduct) {
+    return sendError(res, 404, "Product not found");
+  }
+
+  // In PATCH tutti i campi sono facoltativi; se non arrivano rimangono in undefined
+  const { name, brand, description, price, stock, isActive, categoryId } = req.body || {};
+  // Validazione Stringhe
+  if (name !== undefined && !isStringValid(name)) {
+    return sendError(res, 400, "Invalid product brand")
+  }
+  if (
+    description !== undefined &&
+    description !== null &&
+    typeof description !== "string"
+  ) {
+    return sendError(res, 400, "Invalid product description")
+  }
+
+  
+
+
+
   const body = req.body;
   console.log(body);
   res.send(`Aggionamento del prodotto con id: ${id}`);
