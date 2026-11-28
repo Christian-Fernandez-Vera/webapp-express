@@ -76,9 +76,30 @@ router.patch("/:id", async (req, res) => {
       if (!Number.isInteger(parsedCategoryId)) {
         return sendError(res, 400, "Invalid categoryId");
       }
+      // Cerco se l'ID della categoria fornito è presente nel database
+      const category = await prisma.category.findUnique({
+        where: {id: parsedCategoryId},
+      });
+      // Controllo l'esistenza della categoria e restituisco errore se non trovo nulla
+      if (!category) {
+        return sendError(res, 404, "Category not valid");
+      }
     }
   }
 
+  // Prisma ignora le proprietà che rimangono in undefined
+  const updatedProduct = await prisma.product.update({
+    where: { id },
+    data: {
+      name: name !== undefined ? name.trim() : undefined,
+      brand: brand !== undefined ? brand.trim() : undefined,
+      description: description !== undefined ? isStringValid(description) ? description.trim() : null : undefined,
+      price: parsedPrice,
+      stock: parsedStock,
+      isActive: isActive,
+      categoryId: parsedCategoryId,
+    }
+  })
 
   const body = req.body;
   console.log(body);
