@@ -53,6 +53,14 @@ router.patch("/:id", async (req, res) => {
   ) {
     return sendError(res, 400, "Invalid product description")
   }
+  // Validazione Numeri (stock e price)
+  let parsedPrice;
+  if (price !== undefined) {
+    parsedStock = Number(stock);
+    if (stock === "" || !Number.isInteger(parsedStock) || parsedStock < 0) {
+      return sendError(res, 400, "Invalid stock");
+    }
+  }
 
   
 
