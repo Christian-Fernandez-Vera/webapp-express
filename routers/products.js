@@ -61,6 +61,10 @@ router.patch("/:id", async (req, res) => {
       return sendError(res, 400, "Invalid stock");
     }
   }
+  // Validazione Boolean
+  if (isActive !== undefined && typeof isActive !== "boolean") {
+    return sendError(res, 400, "Invalid isActive value");
+  }
 
   
 
