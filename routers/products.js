@@ -98,12 +98,17 @@ router.patch("/:id", async (req, res) => {
       stock: parsedStock,
       isActive: isActive,
       categoryId: parsedCategoryId,
-    }
-  })
+    },
+  });
 
-  const body = req.body;
-  console.log(body);
-  res.send(`Aggionamento del prodotto con id: ${id}`);
+  // const body = req.body;
+  // console.log(body);
+  // res.send(`Aggionamento del prodotto con id: ${id}`);
+
+
+  // Status 200 di default restituendo il prodotto aggiornato (alternativa senza body: res.sendStatus(204))
+  res.json(updatedProduct);
+  res.status(200).json(updatedProduct);
 });
 
 // DESTROY - Eliminazione di un prodotto (DELETE /products/:id)
