@@ -66,8 +66,18 @@ router.patch("/:id", async (req, res) => {
     return sendError(res, 400, "Invalid isActive value");
   }
 
-  
-
+  // Validazione condizionale di categoryId (consente null per rimuovere una categoria o un ID esistente)
+  let parsedCategoryId;
+  if (categoryId !== undefined) {
+    if (categoryId === null) {
+      parsedCategoryId = null;
+    } else {
+      parsedCategoryId = Number(categoryId);
+      if (!Number.isInteger(parsedCategoryId)) {
+        return sendError(res, 400, "Invalid categoryId");
+      }
+    }
+  }
 
 
   const body = req.body;
